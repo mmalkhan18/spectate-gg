@@ -92,24 +92,6 @@ const [counterLoading, setCounterLoading] = useState(false)
     setStatus('done')
   }
 
-  async function startSession() {
-    if (character && enemyTeam.length > 0) {
-      setStatus('counterpick')
-      setCounterLoading(true)
-      try {
-        const { data } = await axios.post(`${API}/api/sessions/counter-pick`, {
-          game: selectedGame,
-          hero: character,
-          enemyTeam
-        })
-        setCounterAnalysis(data.analysis)
-      } catch {}
-      setCounterLoading(false)
-    } else {
-      await beginRecording()
-    }
-  }
-
   async function beginRecording() {
     const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 1, width: 1920, height: 1080 }, audio: false })
     streamRef.current = stream
@@ -130,6 +112,26 @@ const [counterLoading, setCounterLoading] = useState(false)
     setTimeout(() => captureFrame(data.sessionId), 2000)
     intervalRef.current = setInterval(() => captureFrame(data.sessionId), 30000)
   }
+  
+  async function startSession() {
+    if (character && enemyTeam.length > 0) {
+      setStatus('counterpick')
+      setCounterLoading(true)
+      try {
+        const { data } = await axios.post(`${API}/api/sessions/counter-pick`, {
+          game: selectedGame,
+          hero: character,
+          enemyTeam
+        })
+        setCounterAnalysis(data.analysis)
+      } catch {}
+      setCounterLoading(false)
+    } else {
+      await beginRecording()
+    }
+  }
+
+  
 
   async function captureFrame(sid) {
     const video = videoRef.current

@@ -5,7 +5,13 @@ const rateLimit = require('express-rate-limit');
 const sessionRoutes = require('./routes/sessions');
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+app.use(cors({ 
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:5173',
+    'http://localhost:5173',
+    'https://spectate-gg.vercel.app'
+  ]
+}));
 app.use(express.json({ limit: '50mb' }));
 
 const limiter = rateLimit({ windowMs: 60 * 1000, max: 200 });

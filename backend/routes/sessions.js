@@ -198,7 +198,7 @@ router.post('/:sessionId/question', async (req, res) => {
   res.json({ answer })
 })
 router.post('/counter-pick', async (req, res) => {
-  const { game, character, enemyTeam, playerRank } = req.body
+  const { game, hero, enemyTeam, playerRank } = req.body
 
   const gameConfig = games[game] || games.deadlock
 

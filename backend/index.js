@@ -4,6 +4,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const sessionRoutes = require('./routes/sessions');
 const app = express();
+app.set('trust proxy', 1)
 
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '50mb' }));

@@ -92,26 +92,7 @@ const [counterLoading, setCounterLoading] = useState(false)
     setStatus('done')
   }
 
-  const beginRecording = async () => {
-    const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 1, width: 1920, height: 1080 }, audio: false })
-    streamRef.current = stream
-    const video = document.createElement('video')
-    video.srcObject = stream
-    video.play()
-    videoRef.current = video
-    const { data } = await axios.post(`${API}/api/sessions/start`, {
-      userId: user.id,
-      game: selectedGame,
-      character,
-      enemyTeam,
-      playerRank
-    })+
-    setSessionId(data.sessionId)
-    setStatus('recording')
-    setFrameCount(0)
-    setTimeout(() => captureFrame(data.sessionId), 2000)
-    intervalRef.current = setInterval(() => captureFrame(data.sessionId), 30000)
-  }
+
   
   async function startSession() {
     if (character && enemyTeam.length > 0) {
@@ -127,7 +108,28 @@ const [counterLoading, setCounterLoading] = useState(false)
       } catch {}
       setCounterLoading(false)
     } else {
-      await beginRecording()
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 1, width: 1920, height: 1080 }, audio: false })
+        streamRef.current = stream
+        const video = document.createElement('video')
+        video.srcObject = stream
+        video.play()
+        videoRef.current = video
+        const { data } = await axios.post(`${API}/api/sessions/start`, {
+          userId: user.id,
+          game: selectedGame,
+          character,
+          enemyTeam,
+          playerRank
+        })
+        setSessionId(data.sessionId)
+        setStatus('recording')
+        setFrameCount(0)
+        setTimeout(() => captureFrame(data.sessionId), 2000)
+        intervalRef.current = setInterval(() => captureFrame(data.sessionId), 30000)
+      } catch(err) {
+        console.error('Recording error:', err)
+      }
     }
   }
 
@@ -538,9 +540,32 @@ async function analyzeCounterPick() {
                   <div style={{ height: 4, background: '#1a1a1a', marginTop: '1.5rem' }}></div>
                 </div>
 
-                <button onClick={beginRecording} style={styles.startBtn}>
-                  Start recording session
-                </button>
+                <button onClick={async () => {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 1, width: 1920, height: 1080 }, audio: false })
+      streamRef.current = stream
+      const video = document.createElement('video')
+      video.srcObject = stream
+      video.play()
+      videoRef.current = video
+      const { data } = await axios.post(`${API}/api/sessions/start`, {
+        userId: user.id,
+        game: selectedGame,
+        character,
+        enemyTeam,
+        playerRank
+      })
+      setSessionId(data.sessionId)
+      setStatus('recording')
+      setFrameCount(0)
+      setTimeout(() => captureFrame(data.sessionId), 2000)
+      intervalRef.current = setInterval(() => captureFrame(data.sessionId), 30000)
+    } catch(err) {
+      console.error('Recording error:', err)
+    }
+  }} style={styles.startBtn}>
+  Start recording session
+</button>
               </div>
             )}
           </div>

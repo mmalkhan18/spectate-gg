@@ -54,6 +54,7 @@ router.post('/:sessionId/frame', async (req, res) => {
 
 router.post('/:sessionId/analyze', async (req, res) => {
   const { sessionId } = req.params
+  const { game, character, enemyTeam, playerRank } = req.body
   const { data: session } = await supabase
     .from('sessions').select('*').eq('id', sessionId).single()
 

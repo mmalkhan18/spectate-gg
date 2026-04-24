@@ -92,7 +92,7 @@ const [counterLoading, setCounterLoading] = useState(false)
     setStatus('done')
   }
 
-  async function beginRecording() {
+  const beginRecording = async () => {
     const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 1, width: 1920, height: 1080 }, audio: false })
     streamRef.current = stream
     const video = document.createElement('video')

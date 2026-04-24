@@ -232,7 +232,7 @@ Give a detailed counter pick analysis. Return ONLY a JSON object:
 
   const response = await anthropic.messages.create({
     model: 'claude-opus-4-5',
-    max_tokens: 1000,
+    max_tokens: 1500,
     messages: [{ role: 'user', content: prompt }]
   })
 

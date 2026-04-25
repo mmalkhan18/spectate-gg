@@ -104,7 +104,7 @@ IMPORTANT INSTRUCTIONS FOR PATTERNS:
 
   const userPrompt = `Analyze this ${gameConfig.name} gameplay session (${sampled.length} screenshots).
 The player is confirmed to be playing as ${session.character || 'unknown hero'} - do not suggest or imply they are playing a different hero based on visuals.
-The player's rank is: ${playerRank === 'beginner' ? 'Beginner — focus on fundamentals, explain concepts clearly, be encouraging' : playerRank === 'advanced' ? 'Advanced — skip basics, focus on high level macro and micro optimisation, be direct and detailed' : 'Intermediate — assume basic knowledge, focus on efficiency and decision making'}.
+The player's rank is: ${playerRank === 'beginner' || playerRank === 'beginner2' ? 'Beginner — focus on fundamentals, explain concepts clearly, be encouraging' : playerRank === 'advanced' || playerRank === 'advanced2' ? 'Advanced — skip basics, focus on high level macro and micro optimisation, be direct and detailed' : playerRank ? 'Intermediate — assume basic knowledge, focus on efficiency and decision making' : 'Unknown rank — provide balanced feedback suitable for an average player'}.
 ${enemyTeamCtx}
 ${patternContext}
 

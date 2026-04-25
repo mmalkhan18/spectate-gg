@@ -418,23 +418,23 @@ async function analyzeCounterPick() {
     <option value="">Select your rank (optional)</option>
     {selectedGame === 'deadlock' && <>
       <option value="beginner">Obscurus / Initiate</option>
-      <option value="beginner">Seeker / Alchemist</option>
+      <option value="beginner2">Seeker / Alchemist</option>
       <option value="intermediate">Ritualist / Emissary</option>
-      <option value="intermediate">Archon</option>
+      <option value="intermediate2">Archon</option>
       <option value="advanced">Oracle / Phantom</option>
-      <option value="advanced">Ascendant / Eternus</option>
+      <option value="advanced2">Ascendant</option>
     </>}
     {selectedGame === 'valorant' && <>
       <option value="beginner">Iron / Bronze</option>
-      <option value="beginner">Silver / Gold</option>
+      <option value="beginner2">Silver / Gold</option>
       <option value="intermediate">Platinum / Diamond</option>
       <option value="advanced">Ascendant / Immortal</option>
-      <option value="advanced">Radiant</option>
+      <option value="advanced2">Radiant</option>
     </>}
     {selectedGame === 'cs2' && <>
       <option value="beginner">Silver / Gold Nova</option>
       <option value="intermediate">Master Guardian</option>
-      <option value="intermediate">Distinguished / Legendary Eagle</option>
+      <option value="intermediate2">Distinguished / Legendary Eagle</option>
       <option value="advanced">Supreme / Global Elite</option>
     </>}
   </select>

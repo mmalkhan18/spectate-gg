@@ -112,10 +112,7 @@ Return ONLY a JSON object:
 {
   "summary": "3-4 sentence overall assessment",
   "grades": {
-    "farm": "A/B/C/D or N/A",
-    "positioning": "A/B/C/D or N/A",
-    "mechanics": "A/B/C/D or N/A",
-    "decisions": "A/B/C/D or N/A"
+    ${session.game === 'valorant' ? '"aim": "A/B/C/D or N/A", "utility": "A/B/C/D or N/A", "economy": "A/B/C/D or N/A", "decisions": "A/B/C/D or N/A"' : session.game === 'cs2' ? '"aim": "A/B/C/D or N/A", "utility": "A/B/C/D or N/A", "economy": "A/B/C/D or N/A", "positioning": "A/B/C/D or N/A"' : '"farm": "A/B/C/D or N/A", "positioning": "A/B/C/D or N/A", "mechanics": "A/B/C/D or N/A", "decisions": "A/B/C/D or N/A"'}
   },
   "mistakes": [
     { "title": "short title", "detail": "specific explanation referencing what you saw", "severity": "high/medium/low" }

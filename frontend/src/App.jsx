@@ -375,42 +375,46 @@ async function analyzeCounterPick() {
               ))}
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8a7d5a', marginBottom: 6 }}>{game.characterLabel}</div>
-              <select value={character} onChange={e => setCharacter(e.target.value)} style={styles.select}>
-                {(ROSTERS[selectedGame] || []).map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
+            {selectedGame !== 'cs2' && (
+  <div style={{ marginBottom: '1.5rem' }}>
+    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8a7d5a', marginBottom: 6 }}>{game.characterLabel}</div>
+    <select value={character} onChange={e => setCharacter(e.target.value)} style={styles.select}>
+      {(ROSTERS[selectedGame] || []).map(c => <option key={c}>{c}</option>)}
+    </select>
+  </div>
+)}
 
-            <div style={{ marginBottom: '1.5rem' }}>
-  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8a7d5a', marginBottom: 6 }}>
-    Enemy team <span style={{ color: '#c8a84b', fontSize: 9 }}>({enemyTeam.filter(e => e !== '').length}/6 selected)</span>
-  </div>
-  <div style={{ border: '1px solid #d4c9a8', background: '#faf6ee', maxHeight: 200, overflowY: 'auto' }}>
-    {(ROSTERS[selectedGame] || []).map(hero => {
-      const selected = enemyTeam.includes(hero)
-      return (
-        <div key={hero} onClick={() => {
-          if (selected) {
-            setEnemyTeam(enemyTeam.filter(e => e !== hero))
-          } else if (enemyTeam.filter(e => e !== '').length < 6) {
-            setEnemyTeam([...enemyTeam.filter(e => e !== ''), hero, ...Array(6 - enemyTeam.filter(e => e !== '').length - 1).fill('')])
-          }
-        }} style={{ padding: '8px 14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, background: selected ? '#f0e9d6' : 'transparent', borderBottom: '1px solid #f0e9d6' }}>
-          <div style={{ width: 14, height: 14, border: `1.5px solid ${selected ? '#1a1a1a' : '#c8bb96'}`, background: selected ? '#1a1a1a' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            {selected && <div style={{ width: 8, height: 8, background: '#faf6ee' }}></div>}
-          </div>
-          <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: selected ? 600 : 400 }}>{hero}</div>
-        </div>
-      )
-    })}
-  </div>
-  {enemyTeam.filter(e => e !== '').length > 0 && (
-    <div style={{ marginTop: 8, fontSize: 11, color: '#8a7d5a' }}>
-      Selected: {enemyTeam.filter(e => e !== '').join(', ')}
-    </div>
-  )}
-</div>
+            {selectedGame !== 'cs2' && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8a7d5a', marginBottom: 6 }}>
+                  Enemy team <span style={{ color: '#c8a84b', fontSize: 9 }}>({enemyTeam.filter(e => e !== '').length}/6 selected)</span>
+                </div>
+                <div style={{ border: '1px solid #d4c9a8', background: '#faf6ee', maxHeight: 200, overflowY: 'auto' }}>
+                  {(ROSTERS[selectedGame] || []).map(hero => {
+                    const selected = enemyTeam.includes(hero)
+                    return (
+                      <div key={hero} onClick={() => {
+                        if (selected) {
+                          setEnemyTeam(enemyTeam.filter(e => e !== hero))
+                        } else if (enemyTeam.filter(e => e !== '').length < 6) {
+                          setEnemyTeam([...enemyTeam.filter(e => e !== ''), hero, ...Array(6 - enemyTeam.filter(e => e !== '').length - 1).fill('')])
+                        }
+                      }} style={{ padding: '8px 14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, background: selected ? '#f0e9d6' : 'transparent', borderBottom: '1px solid #f0e9d6' }}>
+                        <div style={{ width: 14, height: 14, border: `1.5px solid ${selected ? '#1a1a1a' : '#c8bb96'}`, background: selected ? '#1a1a1a' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          {selected && <div style={{ width: 8, height: 8, background: '#faf6ee' }}></div>}
+                        </div>
+                        <div style={{ fontSize: 13, color: '#1a1a1a', fontWeight: selected ? 600 : 400 }}>{hero}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+                {enemyTeam.filter(e => e !== '').length > 0 && (
+                  <div style={{ marginTop: 8, fontSize: 11, color: '#8a7d5a' }}>
+                    Selected: {enemyTeam.filter(e => e !== '').join(', ')}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div style={{ marginBottom: '1.5rem' }}>
   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8a7d5a', marginBottom: 6 }}>Your rank</div>
@@ -422,7 +426,7 @@ async function analyzeCounterPick() {
       <option value="intermediate">Ritualist / Emissary</option>
       <option value="intermediate2">Archon</option>
       <option value="advanced">Oracle / Phantom</option>
-      <option value="advanced2">Ascendant</option>
+      <option value="advanced2">Ascendant / Eternus</option>
     </>}
     {selectedGame === 'valorant' && <>
       <option value="beginner">Iron / Bronze</option>

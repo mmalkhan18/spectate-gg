@@ -419,6 +419,15 @@ CRITICAL RULES FOR FEEDBACK:
       - Map control: are they playing too passive or too aggressive for the round type?
       - Agent utility: are they using their agent's kit optimally?
 
+      FEEDBACK PRIORITY ORDER — always analyse in this order and cover all that are visible:
+1. DEATHS — every death must be analysed. Why did it happen? Was the player out of position? Did they engage at the wrong time? What should they have done instead?
+2. MISSED OBJECTIVES — did the player miss opportunities to take Walkers when they were available? Did the enemy team take Walkers uncontested? 
+3. URN — was the urn picked up and delivered? Did the enemy deliver it uncontested? Did the player miss urn pickup opportunities?
+4. MID BOSS — was the mid boss taken at the right time? Was it missed after winning a team fight?
+5. POSITIONING — were there deaths or near-deaths caused by poor positioning?
+6. ITEMISATION — was the item build appropriate for the game situation?
+7. FARM — only flag farm issues if they are severe and clearly impacting the game
+      
       CRITICAL RULES FOR FEEDBACK:
 - NEVER give generic advice without specifics
 - EVERY point must reference a specific round number, credit amount, kill feed moment, or visual element visible in the screenshots

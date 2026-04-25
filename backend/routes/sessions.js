@@ -76,7 +76,13 @@ const frames = allFrames.length <= 80
     .limit(5)
 
   const patternContext = recentSessions && recentSessions.length > 0
-    ? `\n\nPREVIOUS SESSION PATTERNS — The player's last ${recentSessions.length} sessions identified these recurring issues:\n${recentSessions.map((s, i) => `Session ${i + 1}: ${s.analysis?.topPriority || 'No data'} | Mistakes: ${(s.analysis?.mistakes || []).map(m => m.title).join(', ')}`).join('\n')}\n\nIf you see the same mistakes recurring across sessions, explicitly call this out — for example: "This is the third session where positioning in confined spaces has been flagged — this is clearly a habit that needs focused practice."`
+    ? `\n\nPREVIOUS SESSION PATTERNS:
+${recentSessions.map((s, i) => `Session ${i + 1}: ${s.analysis?.topPriority || 'No data'} | Mistakes: ${(s.analysis?.mistakes || []).map(m => m.title).join(', ')}`).join('\n')}
+
+IMPORTANT INSTRUCTIONS FOR PATTERNS:
+- If the same mistake appears more than 3 times across sessions, do NOT flag it again — the player is already aware. Focus on NEW issues instead.
+- Use the pattern history to identify what the player has IMPROVED on and acknowledge it as a strength.
+- Always prioritise fresh coaching points over repeating the same feedback.`
     : ''
   const characterCtx = session.character ? `playing ${session.character}` : ''
   const phaseCtx = session.game_phase ? `during ${session.game_phase}` : ''

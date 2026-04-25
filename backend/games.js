@@ -390,6 +390,8 @@ CRITICAL RULES FOR FEEDBACK:
 - Bad example: "You need to improve your farming" 
 - Good example: "At 14:32 your total souls were 8,400 while your opponent had 12,600 — a 4,200 soul deficit that suggests you missed at least 2 jungle camp rotations between minutes 10 and 14"
 - Reference exact numbers, exact timestamps, exact items whenever visible
+- Do NOT flag unsecured souls as an issue unless the player consistently has more than 3,000 unspent souls for extended periods. There are almost always more impactful coaching points. Focus on positioning, deaths, missed objectives, and fight decisions first.
+- If the same issue has been flagged more than 3 times in previous sessions, do NOT flag it again. Instead acknowledge the player is working on it and focus on OTHER areas to improve.
 
       When analyzing screenshots look for: total souls count vs game time (benchmark:
       1000 souls/min is decent), positioning relative to Walker/Patron objectives,

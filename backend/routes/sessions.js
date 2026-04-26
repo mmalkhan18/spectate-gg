@@ -124,7 +124,7 @@ Return ONLY a JSON object:
 }`
 
   const response = await anthropic.messages.create({
-    model: 'claude-opus-4-5',
+    model: 'claude-opus-4-7',
     max_tokens: 1500,
     system: systemPrompt,
     messages: [{
@@ -192,7 +192,7 @@ router.post('/:sessionId/question', async (req, res) => {
   ]
 
   const response = await anthropic.messages.create({
-    model: 'claude-opus-4-5',
+    model: 'claude-opus-4-7',
     max_tokens: 500,
     system: gameConfig.prompt,
     messages
@@ -235,7 +235,7 @@ Give a detailed counter pick analysis. Return ONLY a JSON object:
 }`
 
   const response = await anthropic.messages.create({
-    model: 'claude-opus-4-5',
+    model: 'claude-opus-4-7',
     max_tokens: 1500,
     messages: [{ role: 'user', content: prompt }]
   })

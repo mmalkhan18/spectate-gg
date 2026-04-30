@@ -5,41 +5,21 @@ import axios from 'axios'
 const API = import.meta.env.VITE_BACKEND_URL
 
 const GAMES = {
-  deadlock: {
-    name: 'Deadlock', short: 'DL', characterLabel: 'Hero',
-    title: 'Know exactly what you did wrong.',
-    sub: 'Spectate watches your screen while you play, then delivers a full professional coaching report — mistakes, strengths, and a priority to work on next.',
-    tip: 'Run Deadlock in Borderless Windowed mode. When prompted, select your screen to share.',
-  },
   valorant: {
     name: 'Valorant', short: 'VL', characterLabel: 'Agent',
     title: 'Sharpen your edge. Climb every round.',
-    sub: 'Track your economy, utility usage, crosshair placement and decision making across a full match.',
+    sub: 'Spectate watches your screen while you play, then delivers a full professional coaching report — mistakes, strengths, and a priority to work on next.',
     tip: 'Run Valorant in Windowed or Borderless mode. Fullscreen will block screen capture.',
-  },
-  cs2: {
-    name: 'CS2', short: 'CS2', characterLabel: 'Side',
-    title: 'Every round. Every mistake. Analysed.',
-    sub: 'AI coaching on your economy, positioning, crosshair placement and utility usage across a full session.',
-    tip: 'Run CS2 in Windowed or Borderless mode. When prompted, select your screen to share.',
   },
 }
 
 const ROSTERS = {
-  deadlock: [
-    'Abrams','Apollo','Bebop','Billy','Calico','Celeste','The Doorman',
-    'Drifter','Dynamo','Graves','Grey Talon','Haze','Holliday','Infernus',
-    'Ivy','Kelvin','Lady Geist','Lash','McGinnis','The Magnificent Sinclair',
-    'Mina','Mirage','Mo & Krill','Paige','Paradox','Pocket','Rem','Seven',
-    'Shiv','Silver','Venator','Victor','Vindicta','Viscous','Vyper','Warden','Wraith','Yamato'
-  ],
   valorant: [
     'Astra','Breach','Brimstone','Chamber','Clove','Cypher',
     'Deadlock','Fade','Gekko','Harbor','Iso','Jett','KAY/O',
     'Killjoy','Miks','Neon','Omen','Phoenix','Raze','Reyna',
     'Sage','Skye','Sova','Tejo','Veto','Viper','Vyse','Waylay','Yoru'
   ],
-  cs2: ['CT Side','T Side'],
 }
 
 const gradeColor = g => ({ A: '#2d6a2d', B: '#1a4a7a', C: '#8b6a00', D: '#8b2020' }[g?.[0]] || '#8a7d5a')
@@ -49,7 +29,7 @@ const sans = "'Inter', system-ui"
 export default function App() {
   const { user } = useUser()
   const [status, setStatus] = useState('idle')
-  const [selectedGame, setSelectedGame] = useState('deadlock')
+  const [selectedGame, setSelectedGame] = useState('valorant')
   const [character, setCharacter] = useState('')
 const [enemyTeam, setEnemyTeam] = useState([])
 const [playerRank, setPlayerRank] = useState('')  
@@ -364,16 +344,7 @@ async function analyzeCounterPick() {
         )}
         {status === 'idle' && (
           <div style={styles.main}>
-            <div style={styles.sectionHeader}>Select your game</div>
-            <div style={styles.gamesGrid}>
-              {Object.entries(GAMES).map(([key, g]) => (
-                <div key={key} onClick={() => setSelectedGame(key)} style={selectedGame === key ? styles.gameCardActive : styles.gameCard}>
-                  <div style={{ width: 36, height: 36, border: `1px solid ${selectedGame === key ? '#1a1a1a' : '#d4c9a8'}`, background: selectedGame === key ? '#1a1a1a' : '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: selectedGame === key ? '#faf6ee' : '#8a7d5a', marginBottom: 10 }}>{g.short}</div>
-                  <div style={{ fontFamily: serif, fontSize: 15, fontWeight: 700, color: '#1a1a1a', marginBottom: 3 }}>{g.name}</div>
-                  <div style={{ fontSize: 11, color: '#8a7d5a' }}>Full session analysis</div>
-                </div>
-              ))}
-            </div>
+            
 
             {selectedGame !== 'cs2' && (
   <div style={{ marginBottom: '1.5rem' }}>

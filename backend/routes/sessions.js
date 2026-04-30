@@ -65,7 +65,7 @@ const frames = allFrames.length <= 80
   ? allFrames
   : Array.from({ length: 80 }, (_, i) => allFrames[Math.floor(i * allFrames.length / 80)])
 
-  const gameConfig = games[session.game] || games.deadlock
+  const gameConfig = games[session.game] || games.valorant
   const { data: recentSessions } = await supabase
     .from('sessions')
     .select('analysis')
@@ -163,7 +163,7 @@ router.post('/:sessionId/question', async (req, res) => {
   const { data: session } = await supabase
     .from('sessions').select('*').eq('id', sessionId).single()
 
-  const gameConfig = games[session.game] || games.deadlock
+  const gameConfig = games[session.game] || games.valorant
   const frames = session.frames || []
 
   const maxFrames = 5

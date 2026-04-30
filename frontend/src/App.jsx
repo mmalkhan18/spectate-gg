@@ -106,7 +106,7 @@ const [counterLoading, setCounterLoading] = useState(false)
         setStatus('recording')
         setFrameCount(0)
         setTimeout(() => captureFrame(data.sessionId), 2000)
-        intervalRef.current = setInterval(() => captureFrame(data.sessionId), 30000)
+        intervalRef.current = setInterval(() => captureFrame(data.sessionId), 15000)
       } catch(err) {
         console.error('Recording error:', err)
       }
@@ -448,7 +448,7 @@ async function analyzeCounterPick() {
       setStatus('recording')
       setFrameCount(0)
       setTimeout(() => captureFrame(data.sessionId), 2000)
-      intervalRef.current = setInterval(() => captureFrame(data.sessionId), 30000)
+      intervalRef.current = setInterval(() => captureFrame(data.sessionId), 15000)
     } catch(err) {
       console.error('Recording error:', err)
     }
@@ -570,7 +570,7 @@ async function analyzeCounterPick() {
       setStatus('recording')
       setFrameCount(0)
       setTimeout(() => captureFrame(data.sessionId), 2000)
-      intervalRef.current = setInterval(() => captureFrame(data.sessionId), 30000)
+      intervalRef.current = setInterval(() => captureFrame(data.sessionId), 15000)
     } catch(err) {
       console.error('Recording error:', err)
     }

@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/clerk-react'
+import { SignedIn, SignedOut, SignInButton, SignOutButton, useUser } from '@clerk/clerk-react'
 import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 
@@ -213,8 +213,14 @@ async function analyzeCounterPick() {
             <button style={{ padding: '7px 16px', background: 'transparent', border: '1px solid rgba(250,246,238,0.2)', color: '#faf6ee', fontSize: 12, cursor: 'pointer', fontFamily: sans }}>Sign in</button>
           </SignInButton>
         </SignedOut>
-        {user && <div style={{ fontSize: 12, color: 'rgba(250,246,238,0.4)', letterSpacing: '0.05em' }}>{user.firstName || user.emailAddresses?.[0]?.emailAddress}</div>}
-      </div>
+{user && (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+    <div style={{ fontSize: 12, color: 'rgba(250,246,238,0.4)', letterSpacing: '0.05em' }}>{user.firstName || user.emailAddresses?.[0]?.emailAddress}</div>
+    <SignOutButton>
+      <button style={{ fontSize: 11, color: 'rgba(250,246,238,0.3)', background: 'transparent', border: '1px solid rgba(250,246,238,0.15)', padding: '4px 10px', cursor: 'pointer', fontFamily: sans }}>Sign out</button>
+    </SignOutButton>
+  </div>
+)}      </div>
 
       <div style={styles.heroSection}>
         <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c8a84b', marginBottom: 12 }}>AI-powered game coaching</div>

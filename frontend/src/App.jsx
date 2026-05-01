@@ -46,6 +46,7 @@ export default function App() {
   const [question, setQuestion] = useState('')
   const [chatHistory, setChatHistory] = useState([])
   const [askingQuestion, setAskingQuestion] = useState(false)
+  const [reportTab, setReportTab] = useState('overview')
   const [counterAnalysis, setCounterAnalysis] = useState(null)
   const [counterLoading, setCounterLoading] = useState(false)
   const intervalRef = useRef(null)
@@ -456,100 +457,194 @@ export default function App() {
 
         {/* DONE / REPORT */}
         {status === 'done' && analysis && (
-          <div style={{ padding: '2.5rem', maxWidth: 900, margin: '0 auto' }}>
+          <div style={{ padding: '2.5rem', maxWidth: 1100, margin: '0 auto' }}>
 
             {/* Report header */}
-            <div style={{ background: c.panel, border: `1px solid ${c.border}`, padding: '1.5rem 2rem', marginBottom: '1.5rem', display: 'grid', gridTemplateColumns: 'auto 1px 1fr 1px auto', gap: '1.5rem', alignItems: 'center', clipPath: clip }}>
-              <div>
-                <div style={{ fontSize: 8, color: c.textDim, fontFamily: mono, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 6 }}>Performance Report</div>
-                <div style={{ fontFamily: serif, fontSize: 32, fontWeight: 700, color: c.text, textTransform: 'uppercase', lineHeight: 1 }}>{user?.firstName || 'Player'}</div>
-                <div style={{ fontSize: 11, color: c.textDim, marginTop: 6, fontFamily: mono }}>Valorant · {character} · {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-              </div>
-              <div style={{ background: c.border, width: 1, alignSelf: 'stretch' }}></div>
-              <div>
-                <div style={{ fontSize: 9, color: c.textDim, fontFamily: mono, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6 }}>Assessment</div>
-                <div style={{ fontSize: 13, color: c.textMid, lineHeight: 1.7, fontWeight: 300 }}>{analysis.summary}</div>
-              </div>
-              <div style={{ background: c.border, width: 1, alignSelf: 'stretch' }}></div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: serif, fontSize: 64, fontWeight: 700, color: c.text, lineHeight: 1 }}>{analysis.grades?.aim?.[0] || analysis.grades?.positioning?.[0] || 'B'}</div>
-                <div style={{ fontSize: 8, color: c.textDim, fontFamily: mono, letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 4 }}>Overall</div>
-              </div>
-            </div>
-
-            {/* Ratings */}
-            <div style={{ background: c.panel, border: `1px solid ${c.border}`, padding: '1.25rem 1.5rem', marginBottom: '1.5rem' }}>
-              <div style={secHead}><span style={{ color: c.red }}>//</span> Ratings</div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem 2rem' }}>
-                {Object.entries(analysis.grades || {}).map(([k, v]) => {
-                  const pct = { A: 88, B: 65, C: 40, D: 20 }[v?.[0]] || 50
-                  const col = gradeColor(v)
-                  return (
-                    <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: `1px solid ${c.borderLight}` }}>
-                      <div style={{ fontSize: 9, color: c.textDim, textTransform: 'capitalize', fontFamily: mono, minWidth: 80 }}>{k}</div>
-                      <div style={{ flex: 1, height: 2, background: c.border }}><div style={{ width: `${pct}%`, height: '100%', background: col }}></div></div>
-                      <div style={{ fontFamily: serif, fontSize: 16, fontWeight: 700, color: col, minWidth: 28, textAlign: 'right' }}>{v}</div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Priority */}
-            {analysis.topPriority && (
-              <div style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `3px solid ${c.red}`, padding: '1.25rem 1.5rem', marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
-                <div style={{ fontSize: 16, color: c.red, flexShrink: 0 }}>★</div>
+            <div style={{ background: c.panel, border: `1px solid ${c.border}`, marginBottom: '1.5rem', clipPath: clip }}>
+              <div style={{ padding: '1.5rem 2rem', display: 'grid', gridTemplateColumns: 'auto 1px 1fr 1px auto', gap: '1.5rem', alignItems: 'center' }}>
                 <div>
-                  <div style={{ fontSize: 8, color: c.red, fontFamily: mono, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 8 }}>Top priority this week</div>
-                  <div style={{ fontSize: 13, color: c.textMid, lineHeight: 1.7, fontWeight: 300 }}>{analysis.topPriority}</div>
+                  <div style={{ fontSize: 8, color: c.textDim, fontFamily: mono, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 6 }}>Performance Report</div>
+                  <div style={{ fontFamily: serif, fontSize: 32, fontWeight: 700, color: c.text, textTransform: 'uppercase', lineHeight: 1 }}>{user?.firstName || 'Player'}</div>
+                  <div style={{ fontSize: 11, color: c.textDim, marginTop: 6, fontFamily: mono }}>Valorant · {character} · {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                </div>
+                <div style={{ background: c.border, width: 1, alignSelf: 'stretch' }}></div>
+                <div>
+                  <div style={{ fontSize: 9, color: c.textDim, fontFamily: mono, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6 }}>Assessment</div>
+                  <div style={{ fontSize: 13, color: c.textMid, lineHeight: 1.7, fontWeight: 300 }}>{analysis.summary}</div>
+                </div>
+                <div style={{ background: c.border, width: 1, alignSelf: 'stretch' }}></div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: serif, fontSize: 64, fontWeight: 700, color: c.text, lineHeight: 1 }}>{analysis.grades?.aim?.[0] || analysis.grades?.positioning?.[0] || 'B'}</div>
+                  <div style={{ fontSize: 8, color: c.textDim, fontFamily: mono, letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 4 }}>Overall</div>
+                </div>
+              </div>
+
+              {/* Tabs */}
+              <div style={{ display: 'flex', borderTop: `1px solid ${c.border}` }}>
+                {['overview','rounds','combat','objectives'].map(tab => (
+                  <div key={tab} onClick={() => setReportTab(tab)} style={{ padding: '12px 24px', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', fontFamily: mono, color: reportTab === tab ? c.red : c.textDim, cursor: 'pointer', borderBottom: `2px solid ${reportTab === tab ? c.red : 'transparent'}`, transition: 'all 0.15s' }}>
+                    {tab}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* OVERVIEW TAB */}
+            {reportTab === 'overview' && (
+              <div>
+                {/* Radar + Ratings | Highlights */}
+                <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                  <div style={{ background: c.panel, border: `1px solid ${c.border}`, padding: '1.5rem' }}>
+                    <div style={{ ...secHead, marginBottom: 12 }}><span style={{ color: c.red }}>//</span> Radar</div>
+                    <svg viewBox="0 0 280 230" width="100%" xmlns="http://www.w3.org/2000/svg">
+                      <g transform="translate(140,120)">
+                        {[80,60,40,20].map(r => <polygon key={r} points={`0,-${r} ${r*0.866},-${r*0.5} ${r*0.866},${r*0.5} 0,${r} -${r*0.866},${r*0.5} -${r*0.866},-${r*0.5}`} fill="none" stroke={r===80?"#1e1e2e":"#141420"} strokeWidth={r===80?1:0.5}/>)}
+                        {[[0,-80],[69.3,-40],[69.3,40],[0,80],[-69.3,40],[-69.3,-40]].map(([x,y],i) => <line key={i} x1="0" y1="0" x2={x} y2={y} stroke="#1e1e2e" strokeWidth="0.5"/>)}
+                        {(() => {
+                          const grades = analysis.grades || {}
+                          const keys = Object.keys(grades)
+                          const vals = keys.map(k => { const g = grades[k]; return ({A:80,B:52,C:32,D:16}[g?.[0]] || 40) })
+                          const n = Math.min(keys.length, 6)
+                          const points = vals.slice(0,n).map((v,i) => {
+                            const angle = (i * 2 * Math.PI / 6) - Math.PI/2
+                            return `${v*Math.cos(angle)},${v*Math.sin(angle)}`
+                          }).join(' ')
+                          const dots = vals.slice(0,n).map((v,i) => {
+                            const angle = (i * 2 * Math.PI / 6) - Math.PI/2
+                            return <circle key={i} cx={v*Math.cos(angle)} cy={v*Math.sin(angle)} r="3" fill={gradeColor(grades[keys[i]])}/>
+                          })
+                          return <><polygon points={points} fill="rgba(255,70,85,0.08)" stroke="#ff4655" strokeWidth="1.5"/>{dots}</>
+                        })()}
+                        {Object.keys(analysis.grades||{}).slice(0,6).map((k,i) => {
+                          const angle = (i * 2 * Math.PI / 6) - Math.PI/2
+                          const x = 95*Math.cos(angle), y = 95*Math.sin(angle)
+                          return <text key={k} x={x} y={y+3} textAnchor="middle" style={{fontFamily:'DM Mono,monospace',fontSize:8,fill:'#4a5568',textTransform:'uppercase',letterSpacing:'0.1em'}}>{k}</text>
+                        })}
+                      </g>
+                    </svg>
+
+                    <div style={{ marginTop: 12 }}>
+                      {Object.entries(analysis.grades || {}).map(([k, v]) => {
+                        const pct = { A: 88, B: 65, C: 40, D: 20 }[v?.[0]] || 50
+                        const col = gradeColor(v)
+                        return (
+                          <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderBottom: `1px solid ${c.borderLight}` }}>
+                            <div style={{ fontSize: 9, color: c.textDim, textTransform: 'capitalize', fontFamily: mono, minWidth: 80 }}>{k}</div>
+                            <div style={{ flex: 1, height: 2, background: c.border }}><div style={{ width: `${pct}%`, height: '100%', background: col }}></div></div>
+                            <div style={{ fontFamily: serif, fontSize: 16, fontWeight: 700, color: col, minWidth: 28, textAlign: 'right' }}>{v}</div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    {/* Highlights */}
+                    <div style={{ background: c.panel, border: `1px solid ${c.border}`, padding: '1.5rem' }}>
+                      <div style={{ ...secHead, marginBottom: 12 }}><span style={{ color: c.red }}>//</span> Key highlights</div>
+                      {[analysis.topPriority, ...(analysis.mistakes||[]).slice(0,2).map(m=>m.title), ...(analysis.strengths||[]).slice(0,1).map(s=>s.title)].filter(Boolean).map((point, i) => (
+                        <div key={i} style={{ display: 'grid', gridTemplateColumns: '28px 1fr', gap: 10, padding: '8px 0', borderBottom: `1px solid ${c.borderLight}` }}>
+                          <div style={{ fontFamily: mono, fontSize: 10, color: c.red }}>0{i+1}</div>
+                          <div style={{ fontSize: 12, color: c.textMid, lineHeight: 1.5 }}>{point}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Priority */}
+                    {analysis.topPriority && (
+                      <div style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `3px solid ${c.red}`, padding: '1.25rem 1.5rem', display: 'flex', gap: '1rem' }}>
+                        <div style={{ fontSize: 16, color: c.red, flexShrink: 0 }}>★</div>
+                        <div>
+                          <div style={{ fontSize: 8, color: c.red, fontFamily: mono, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 8 }}>Top priority this week</div>
+                          <div style={{ fontSize: 13, color: c.textMid, lineHeight: 1.7, fontWeight: 300 }}>{analysis.topPriority}</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Strengths + Weaknesses */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                  <div>
+                    <div style={{ ...secHead, marginBottom: 12 }}><span style={{ color: c.red }}>//</span> Strengths</div>
+                    {(analysis.strengths || []).map((st, i) => (
+                      <div key={i} style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `2px solid #276749`, padding: '1rem', marginBottom: 6 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: c.text, marginBottom: 4, fontFamily: serif, textTransform: 'uppercase' }}>{st.title}</div>
+                        <div style={{ fontSize: 12, color: c.textDim, lineHeight: 1.6 }}>{st.detail}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <div style={{ ...secHead, marginBottom: 12 }}><span style={{ color: c.red }}>//</span> Weaknesses</div>
+                    {(analysis.mistakes || []).map((m, i) => (
+                      <div key={i} style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `2px solid ${c.redBorder}`, padding: '1rem', marginBottom: 6, display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem' }}>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: c.text, marginBottom: 4, fontFamily: serif, textTransform: 'uppercase' }}>{m.title}</div>
+                          <div style={{ fontSize: 12, color: c.textDim, lineHeight: 1.6 }}>{m.detail}</div>
+                        </div>
+                        {m.severity && <div style={{ fontSize: 7, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '3px 6px', fontFamily: mono, flexShrink: 0, height: 'fit-content', color: m.severity === 'high' ? '#fc8181' : '#f6ad55', border: `1px solid ${m.severity === 'high' ? '#742a2a' : '#744210'}`, background: m.severity === 'high' ? '#1a0808' : '#1a1008' }}>{m.severity}</div>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ask your coach */}
+                <div style={{ background: c.panel, border: `1px solid ${c.border}`, padding: '1.5rem', marginBottom: '1.5rem' }}>
+                  <div style={{ ...secHead, marginBottom: 12 }}><span style={{ color: c.red }}>//</span> Ask your coach</div>
+                  <div style={{ marginBottom: 16 }}>
+                    {chatHistory.map((m, i) => (
+                      <div key={i} style={{ marginBottom: 10, padding: '10px 14px', background: m.role === 'user' ? 'rgba(255,70,85,0.05)' : c.bg, border: `1px solid ${m.role === 'user' ? c.redBorder : c.borderLight}` }}>
+                        <div style={{ fontSize: 8, fontWeight: 700, color: m.role === 'user' ? c.red : c.textDim, textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: mono, marginBottom: 6 }}>{m.role === 'user' ? 'You' : 'Coach'}</div>
+                        <div style={{ fontSize: 13, color: c.textMid, lineHeight: 1.6 }}>{m.content}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <input type="text" value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={e => e.key === 'Enter' && askQuestion()} placeholder="Ask anything about your game..." style={{ flex: 1, padding: '10px 14px', background: c.bg, border: `1px solid ${c.border}`, color: c.text, fontSize: 13, outline: 'none', fontFamily: sans }} />
+                    <button onClick={askQuestion} disabled={askingQuestion || !question.trim()} style={{ ...btn.primary, opacity: askingQuestion ? 0.6 : 1, padding: '10px 20px' }}>{askingQuestion ? '...' : 'Ask'}</button>
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* Strengths + Weaknesses */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-              <div>
-                <div style={secHead}><span style={{ color: c.red }}>//</span> Strengths</div>
-                {(analysis.strengths || []).map((st, i) => (
-                  <div key={i} style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `2px solid #276749`, padding: '1rem', marginBottom: 6 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: c.text, marginBottom: 4, fontFamily: serif, textTransform: 'uppercase' }}>{st.title}</div>
-                    <div style={{ fontSize: 12, color: c.textDim, lineHeight: 1.6 }}>{st.detail}</div>
-                  </div>
-                ))}
+            {/* ROUNDS TAB */}
+            {reportTab === 'rounds' && (
+              <div style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `3px solid ${c.red}`, padding: '2rem', textAlign: 'center' }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>📊</div>
+                <div style={{ fontFamily: serif, fontSize: 20, fontWeight: 700, color: c.text, textTransform: 'uppercase', marginBottom: 8 }}>Round Analytics</div>
+                <div style={{ fontSize: 13, color: c.textDim, marginBottom: 20, fontFamily: mono }}>Round timeline · Economy efficiency · Survival rate by round type</div>
+                <div style={{ background: c.redDim, border: `1px solid ${c.redBorder}`, padding: '12px 20px', display: 'inline-block' }}>
+                  <div style={{ fontSize: 9, color: c.red, fontFamily: mono, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Connect Riot account to unlock</div>
+                </div>
               </div>
-              <div>
-                <div style={secHead}><span style={{ color: c.red }}>//</span> Weaknesses</div>
-                {(analysis.mistakes || []).map((m, i) => (
-                  <div key={i} style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `2px solid ${c.redBorder}`, padding: '1rem', marginBottom: 6, display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem' }}>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: c.text, marginBottom: 4, fontFamily: serif, textTransform: 'uppercase' }}>{m.title}</div>
-                      <div style={{ fontSize: 12, color: c.textDim, lineHeight: 1.6 }}>{m.detail}</div>
-                    </div>
-                    {m.severity && <div style={{ fontSize: 7, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '3px 6px', fontFamily: mono, flexShrink: 0, height: 'fit-content', color: m.severity === 'high' ? '#fc8181' : '#f6ad55', border: `1px solid ${m.severity === 'high' ? '#742a2a' : '#744210'}`, background: m.severity === 'high' ? '#1a0808' : '#1a1008' }}>{m.severity}</div>}
-                  </div>
-                ))}
-              </div>
-            </div>
+            )}
 
-            {/* Ask your coach */}
-            <div style={{ background: c.panel, border: `1px solid ${c.border}`, padding: '1.5rem', marginBottom: '1.5rem' }}>
-              <div style={secHead}><span style={{ color: c.red }}>//</span> Ask your coach</div>
-              <div style={{ marginBottom: 16 }}>
-                {chatHistory.map((m, i) => (
-                  <div key={i} style={{ marginBottom: 10, padding: '10px 14px', background: m.role === 'user' ? 'rgba(255,70,85,0.05)' : c.bg, border: `1px solid ${m.role === 'user' ? c.redBorder : c.borderLight}` }}>
-                    <div style={{ fontSize: 8, fontWeight: 700, color: m.role === 'user' ? c.red : c.textDim, textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: mono, marginBottom: 6 }}>{m.role === 'user' ? 'You' : 'Coach'}</div>
-                    <div style={{ fontSize: 13, color: c.textMid, lineHeight: 1.6 }}>{m.content}</div>
-                  </div>
-                ))}
+            {/* COMBAT TAB */}
+            {reportTab === 'combat' && (
+              <div style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `3px solid ${c.red}`, padding: '2rem', textAlign: 'center' }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>⚔️</div>
+                <div style={{ fontFamily: serif, fontSize: 20, fontWeight: 700, color: c.text, textTransform: 'uppercase', marginBottom: 8 }}>Combat Stats</div>
+                <div style={{ fontSize: 13, color: c.textDim, marginBottom: 20, fontFamily: mono }}>K/D timeline · Headshot % · Weapon accuracy · Multi-kills · Opening duels · Trade efficiency</div>
+                <div style={{ background: c.redDim, border: `1px solid ${c.redBorder}`, padding: '12px 20px', display: 'inline-block' }}>
+                  <div style={{ fontSize: 9, color: c.red, fontFamily: mono, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Connect Riot account to unlock</div>
+                </div>
               </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input type="text" value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={e => e.key === 'Enter' && askQuestion()} placeholder="Ask anything about your game..." style={{ flex: 1, padding: '10px 14px', background: c.bg, border: `1px solid ${c.border}`, color: c.text, fontSize: 13, outline: 'none', fontFamily: sans }} />
-                <button onClick={askQuestion} disabled={askingQuestion || !question.trim()} style={{ ...btn.primary, opacity: askingQuestion ? 0.6 : 1, padding: '10px 20px' }}>{askingQuestion ? '...' : 'Ask'}</button>
+            )}
+
+            {/* OBJECTIVES TAB */}
+            {reportTab === 'objectives' && (
+              <div style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `3px solid ${c.red}`, padding: '2rem', textAlign: 'center' }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>🎯</div>
+                <div style={{ fontFamily: serif, fontSize: 20, fontWeight: 700, color: c.text, textTransform: 'uppercase', marginBottom: 8 }}>Objectives</div>
+                <div style={{ fontSize: 13, color: c.textDim, marginBottom: 20, fontFamily: mono }}>Site heatmap · Plant/defuse · Clutch performance · Death map</div>
+                <div style={{ background: c.redDim, border: `1px solid ${c.redBorder}`, padding: '12px 20px', display: 'inline-block' }}>
+                  <div style={{ fontSize: 9, color: c.red, fontFamily: mono, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Connect Riot account to unlock</div>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* New session */}
-            <button onClick={() => { setStatus('idle'); setAnalysis(null); setFrameCount(0); setChatHistory([]); setQuestion(''); setCounterAnalysis(null); setEnemyTeam([]) }} style={{ ...btn.secondary, width: '100%', padding: 13 }}>
+            <button onClick={() => { setStatus('idle'); setAnalysis(null); setFrameCount(0); setChatHistory([]); setQuestion(''); setCounterAnalysis(null); setEnemyTeam([]); setReportTab('overview') }} style={{ ...btn.secondary, width: '100%', padding: 13, marginTop: '1.5rem' }}>
               Start new session
             </button>
           </div>

@@ -49,11 +49,15 @@ export default function App() {
   const [reportTab, setReportTab] = useState('overview')
   const [counterAnalysis, setCounterAnalysis] = useState(null)
   const [counterLoading, setCounterLoading] = useState(false)
+  const [matchData, setMatchData] = useState(null)
+  const [riotId, setRiotId] = useState('')
+const [riotRegion, setRiotRegion] = useState('eu')
+const [profileSaved, setProfileSaved] = useState(false)
   const intervalRef = useRef(null)
   const streamRef = useRef(null)
   const videoRef = useRef(null)
 
-  useEffect(() => { if (user) loadHistory() }, [user])
+  useEffect(() => { if (user) { loadHistory(); loadProfile() } }, [user])
 
   async function loadHistory() {
     try {
@@ -61,7 +65,29 @@ export default function App() {
       setHistory(data.sessions || [])
     } catch {}
   }
+async function loadProfile() {
+    try {
+      const { data } = await axios.get(`${API}/api/sessions/profile/${user.id}`)
+      if (data.profile?.riot_id) {
+        setRiotId(data.profile.riot_id)
+        setRiotRegion(data.profile.riot_region || 'eu')
+        setProfileSaved(true)
+      }
+    } catch {}
+  }
 
+  async function saveProfile() {
+    console.log('saveProfile called with:', riotId, riotRegion)
+    try {
+      const response = await axios.post(`${API}/api/sessions/profile/${user.id}`, {
+        riotId, riotRegion
+      })
+      console.log('Save response:', response.data)
+      setProfileSaved(true)
+    } catch(err) {
+      console.error('Save error:', err.response?.data || err.message)
+    }
+  }
   function viewSession(session) {
     setAnalysis(session.analysis)
     setCharacter(session.character || '')
@@ -125,6 +151,7 @@ export default function App() {
       game: 'valorant', character, enemyTeam, playerRank
     })
     setAnalysis(data.analysis)
+    setMatchData(data.matchData || null)
     setStatus('done')
     loadHistory()
   }
@@ -249,7 +276,7 @@ export default function App() {
             <div style={{ marginBottom: '1.5rem' }}>
               <div style={secHead}>
                 <span style={{ color: c.red }}>//</span> Enemy team
-                <span style={{ color: c.red, fontFamily: mono, fontSize: 9 }}>({enemyTeam.length}/6)</span>
+                <span style={{ color: c.red, fontFamily: mono, fontSize: 9 }}>({enemyTeam.length}/5)</span>
               </div>
               <div style={{ border: `1px solid ${c.border}`, background: c.panel, maxHeight: 200, overflowY: 'auto', clipPath: clipSm }}>
                 {AGENTS.map(agent => {
@@ -257,7 +284,7 @@ export default function App() {
                   return (
                     <div key={agent} onClick={() => {
                       if (selected) setEnemyTeam(enemyTeam.filter(e => e !== agent))
-                      else if (enemyTeam.length < 6) setEnemyTeam([...enemyTeam, agent])
+                      else if (enemyTeam.length < 5) setEnemyTeam([...enemyTeam, agent])
                     }} style={{ padding: '8px 14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, background: selected ? 'rgba(255,70,85,0.08)' : 'transparent', borderBottom: `1px solid ${c.borderLight}` }}>
                       <div style={{ width: 14, height: 14, border: `1.5px solid ${selected ? c.red : c.border}`, background: selected ? c.red : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         {selected && <div style={{ width: 6, height: 6, background: '#fff' }}></div>}
@@ -281,7 +308,33 @@ export default function App() {
                 {RANKS.map(r => <option key={r.value} value={r.value} style={{ background: c.panel }}>{r.label}</option>)}
               </select>
             </div>
-
+{/* Riot ID */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ ...secHead, marginBottom: 12 }}><span style={{ color: c.red }}>//</span> Your Riot ID</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto', gap: 8 }}>
+                <input
+                  type="text"
+                  value={riotId}
+                  onChange={e => { setRiotId(e.target.value); setProfileSaved(false) }}
+                  placeholder="PlayerName#TAG"
+                  style={{ padding: '11px 16px', background: c.panel, border: `1px solid ${c.border}`, color: c.text, fontSize: 13, fontFamily: sans, outline: 'none', clipPath: clipSm }}
+                />
+                <select value={riotRegion} onChange={e => { setRiotRegion(e.target.value); setProfileSaved(false) }} style={{ padding: '11px 16px', background: c.panel, border: `1px solid ${c.border}`, color: c.text, fontSize: 13, fontFamily: sans, outline: 'none', clipPath: clipSm }}>
+                  <option value="eu">EU</option>
+                  <option value="na">NA</option>
+                  <option value="ap">AP</option>
+                  <option value="kr">KR</option>
+                  <option value="latam">LATAM</option>
+                  <option value="br">BR</option>
+                </select>
+                <button onClick={saveProfile} disabled={!riotId.trim()} style={{ ...btn.ghost, opacity: !riotId.trim() ? 0.5 : 1 }}>
+                  {profileSaved ? '✓ Saved' : 'Save'}
+                </button>
+              </div>
+              <div style={{ fontSize: 10, color: c.textDim, marginTop: 6, fontFamily: mono }}>
+                Required to unlock round, combat and objective analytics
+              </div>
+            </div>
             {/* Tip */}
             <div style={{ background: c.panel, border: `1px solid ${c.border}`, borderLeft: `2px solid ${c.red}`, padding: '12px 16px', marginBottom: '2rem', display: 'flex', gap: 10 }}>
               <div style={{ fontSize: 9, color: c.red, fontFamily: mono, letterSpacing: '0.1em', flexShrink: 0, marginTop: 1 }}>TIP</div>
@@ -644,7 +697,7 @@ export default function App() {
             )}
 
             {/* New session */}
-            <button onClick={() => { setStatus('idle'); setAnalysis(null); setFrameCount(0); setChatHistory([]); setQuestion(''); setCounterAnalysis(null); setEnemyTeam([]); setReportTab('overview') }} style={{ ...btn.secondary, width: '100%', padding: 13, marginTop: '1.5rem' }}>
+            <button onClick={() => { setStatus('idle'); setAnalysis(null); setFrameCount(0); setChatHistory([]); setQuestion(''); setCounterAnalysis(null); setEnemyTeam([]); setReportTab('overview'); setMatchData(null) }} style={{ ...btn.secondary, width: '100%', padding: 13, marginTop: '1.5rem' }}>
               Start new session
             </button>
           </div>

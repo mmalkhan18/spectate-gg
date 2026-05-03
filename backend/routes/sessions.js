@@ -4,6 +4,7 @@ const Anthropic = require('@anthropic-ai/sdk')
 const { createClient } = require('@supabase/supabase-js')
 const sharp = require('sharp')
 const games = require('../games')
+const { getMatchDataForUser, parseMatchData } = require('../henrik')
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
@@ -61,9 +62,9 @@ router.post('/:sessionId/analyze', async (req, res) => {
 if (!session) return res.status(404).json({ error: 'Session not found' })
 
 const allFrames = session.frames || []
-const frames = allFrames.length <= 80
+const frames = allFrames.length <= 40
   ? allFrames
-  : Array.from({ length: 80 }, (_, i) => allFrames[Math.floor(i * allFrames.length / 80)])
+  : Array.from({ length: 40 }, (_, i) => allFrames[Math.floor(i * allFrames.length / 40)])
 
   const gameConfig = games[session.game] || games.valorant
   const { data: recentSessions } = await supabase
@@ -125,7 +126,7 @@ Return ONLY a JSON object:
 
   const response = await anthropic.messages.create({
     model: 'claude-opus-4-7',
-    max_tokens: 1500,
+    max_tokens: 3000,
     system: systemPrompt,
     messages: [{
       role: 'user',
@@ -141,8 +142,31 @@ Return ONLY a JSON object:
     .update({ status: 'complete', analysis, frame_count: frames.length })
     .eq('id', sessionId)
 
-  res.json({ analysis })
-})
+await supabase.from('sessions').update({ analysis, status: 'complete' }).eq('id', sessionId)
+
+  // Fetch Henrik match data if user has Riot ID
+    let matchData = null
+    try {
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('riot_id, riot_region')
+        .eq('user_id', session.user_id)
+        .single()
+
+      console.log('Profile fetched:', profile)
+
+      if (profile?.riot_id) {
+        console.log('Calling Henrik with:', profile.riot_id, profile.riot_region)
+        const raw = await getMatchDataForUser(profile.riot_id, profile.riot_region || 'eu')
+        console.log('Henrik raw response:', raw ? 'data received' : 'null')
+        if (raw) matchData = parseMatchData(raw, raw.puuid)
+      }
+    } catch (err) {
+      console.error('Henrik fetch error:', err.message)
+      console.error('Henrik full error:', err)
+    }
+
+    res.json({ analysis, matchData })})
 
 router.get('/history/:userId', async (req, res) => {
   const { userId } = req.params
@@ -193,7 +217,7 @@ router.post('/:sessionId/question', async (req, res) => {
 
   const response = await anthropic.messages.create({
     model: 'claude-opus-4-7',
-    max_tokens: 500,
+    max_tokens: 1500,
     system: gameConfig.prompt,
     messages
   })
@@ -236,7 +260,7 @@ Give a detailed counter pick analysis. Return ONLY a JSON object:
 
   const response = await anthropic.messages.create({
     model: 'claude-opus-4-7',
-    max_tokens: 1500,
+    max_tokens: 3000,
     messages: [{ role: 'user', content: prompt }]
   })
 
@@ -245,5 +269,35 @@ Give a detailed counter pick analysis. Return ONLY a JSON object:
   const analysis = JSON.parse(clean)
 
   res.json({ analysis })
+})
+router.get('/profile/:userId', async (req, res) => {
+  const { userId } = req.params
+  const { data } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .single()
+  res.json({ profile: data || null })
+})
+
+router.post('/profile/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params
+    const { riotId, riotRegion } = req.body
+    console.log('Saving profile for:', userId, riotId, riotRegion)
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .upsert({ user_id: userId, riot_id: riotId, riot_region: riotRegion || 'eu' })
+      .select()
+      .single()
+    if (error) {
+      console.error('Supabase error:', error)
+      return res.status(500).json({ error: error.message })
+    }
+    res.json({ profile: data })
+  } catch (err) {
+    console.error('Profile save error:', err)
+    res.status(500).json({ error: err.message })
+  }
 })
 module.exports = router
